@@ -1,29 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My Website</title>
+  <title>Cybersecurity News</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .feed-container {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .post {
+      background: #1e293b;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    .post:hover {
+      background: #334155;
+    }
+
+    .post a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .meta {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    .source {
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 5px;
+      margin-left: 5px;
+    }
+
+    .krebs { color: #facc15; }
+    .bleep { color: #4ade80; }
+    .secweek { color: #fb7185; }
+    .hacker { color: #a78bfa; }
+  </style>
 </head>
 <body>
-  <h1>Hello, world!</h1>
-  <p>Welcome to my GitHub Pages site.</p>
-</body>
 
-  <div id="feed"></div>
+<h1>🛡️ Cybersecurity News Dashboard</h1>
+<div class="feed-container" id="feed"></div>
 
 <script>
-fetch("https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/")
-  .then(response => response.json())
-  .then(data => {
-    const container = document.getElementById("feed");
+const feeds = [
+  {
+    url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/",
+    source: "Krebs",
+    class: "krebs"
+  },
+  {
+    url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/",
+    source: "BleepingComputer",
+    class: "bleep"
+  },
+  {
+    url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/securityweek",
+    source: "SecurityWeek",
+    class: "secweek"
+  },
+  {
+    url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews",
+    source: "Hacker News",
+    class: "hacker"
+  }
+];
 
-    data.items.slice(0, 5).forEach(item => {
-      const post = document.createElement("div");
-      post.innerHTML = `
-        <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
-        <p>${item.pubDate}</p>
-      `;
-      container.appendChild(post);
-    });
+async function loadFeeds() {
+  let allPosts = [];
+
+  for (let feed of feeds) {
+    try {
+      const res = await fetch(feed.url);
+      const data = await res.json();
+
+      const posts = data.items.map(item => ({
+        title: item.title,
+        link: item.link,
+        date: new Date(item.pubDate),
+        source: feed.source,
+        class: feed.class
+      }));
+
+      allPosts = allPosts.concat(posts);
+    } catch (err) {
+      console.error("Feed error:", err);
+    }
+  }
+
+  allPosts.sort((a, b) => b.date - a.date);
+  displayPosts(allPosts.slice(0, 15));
+}
+
+function displayPosts(posts) {
+  const container = document.getElementById("feed");
+  container.innerHTML = "";
+
+  posts.forEach(post => {
+    const div = document.createElement("div");
+    div.className = "post";
+
+    div.innerHTML = `
+      <a href="${post.link}" target="_blank">${post.title}</a>
+      <div class="meta">
+        ${post.date.toLocaleString()} • 
+        <span class="source ${post.class}">${post.source}</span>
+      </div>
+    `;
+
+    container.appendChild(div);
   });
+}
+
+loadFeeds();
 </script>
+
+</body>
 </html>
