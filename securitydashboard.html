@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cybersecurity News & CVE Dashboard</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .feed-container {
+    max-width: 900px;
+    margin: auto;
+  }
+  .post {
+    background: #1e293b;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+  .post:hover { background: #334155; }
+  .post a {
+    color: #38bdf8;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .meta {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 5px;
+  }
+  .source { font-weight: bold; padding: 2px 6px; border-radius: 5px; margin-left: 5px; }
+  .krebs { color: #facc15; }
+  .bleep { color: #4ade80; }
+  .secweek { color: #fb7185; }
+  .hacker { color: #a78bfa; }
+  .cve { margin-top:5px; font-size:12px; background:#334155; padding:5px; border-radius:5px; }
+</style>
+</head>
+<body>
 
+<h1>🛡️ Cybersecurity News & CVE Dashboard</h1>
+<div class="feed-container" id="feed"></div>
+
+<script>
+// --- FEEDS CONFIG ---
+const feeds = [
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/", source: "Krebs", class: "krebs" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/", source: "BleepingComputer", class: "bleep" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/securityweek", source: "SecurityWeek", class: "secweek" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews", source: "Hacker News", class: "hacker" }
+];
+
+// --- CVE REGEX ---
+const cveRegex = /CVE-\d{4}-\d{4,7}/gi;
+
+// --- LOAD FEEDS ---
+async function loadFeeds() {
+  let allPosts = [];
+
+  for (let feed of feeds) {
+    try {
+      const res = await fetch(feed.url);
+      const data = await res.json();
+
+      const posts = data.items.map(item => {
+        const fullText = (item.title || "") + " " + (item.description || "");
+        const cveData = extractCVEData(fullText, item.title || "", item.link);
+
+        return {
+          title: item.title,
+          link: item.link,
+          date: new Date(item.pubDate),
+          source: feed.source,
+          class: feed.class,
+          cves: cveData
+        };
+      });
+
+      allPosts = allPosts.concat(posts);
+    } catch (err) {
+      console.error("Feed error:", err);
+    }
+  }
+
+  // Sort by newest first
+  allPosts.sort((a, b) => b.date - a.date);
+  displayPosts(allPosts.slice(0, 15));
+}
+
+// --- DISPLAY POSTS ---
+function displayPosts(posts) {
+  const container = document.getElementById("feed");
+  container.innerHTML = "";
+
+  posts.forEach(post => {
+    const div = document.createElement("div");
+    div.className = "post";
+
+    const cveList = post.cves.map(c => `
+      <div class="cve">
+        🔎 <strong>${c.cve}</strong>
+        ${c.severity ? ` | Severity: ${c.severity}` : ""}
+        ${c.cvss ? ` | CVSS: ${c.cvss}` : ""}
+        ${c.software.length ? ` | Software: ${c.software.join(", ")}` : ""}
+        <br>${c.description}
+      </div>
+    `).join("");
+
+    div.innerHTML = `
+      <a href="${post.link}" target="_blank">${post.title}</a>
+      <div class="meta">
+        ${post.date.toLocaleString()} • <span class="source ${post.class}">${post.source}</span>
+      </div>
+      ${cveList}
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+// --- CVE EXTRACTION ---
+function extractCVEData(text, title, link) {
+  const results = [];
+  const cves = text.match(cveRegex) || [];
+
+  cves.forEach(cve => {
+    results.push({
+      cve: cve.toUpperCase(),
+      article: title,
+      link: link,
+      description: extractDescription(text, cve),
+      software: extractSoftware(text),
+      severity: extractSeverity(text),
+      cvss: extractCVSS(text)
+    });
+  });
+
+  return results;
+}
+
+function extractDescription(text, cve) {
+  const index = text.indexOf(cve);
+  if (index === -1) return "";
+  return text.substring(Math.max(0, index - 100), index + 150).replace(/\s+/g, " ");
+}
+
+function extractSoftware(text) {
+  const keywords = ["Windows", "Linux", "Apache", "NGINX", "Chrome", "Firefox", "Android", "iOS", "Cisco", "VMware", "Microsoft"];
+  return keywords.filter(k => text.includes(k));
+}
+
+function extractSeverity(text) {
+  const levels = ["Critical", "High", "Medium", "Low"];
+  for (let level of levels) {
+    if (text.toLowerCase().includes(level.toLowerCase())) return level;
+  }
+  return "Unknown";
+}
+
+function extractCVSS(text) {
+  const match = text.match(/CVSS[:\s]*([0-9.]+)/i);
+  return match ? match[1] : null;
+}
+
+// --- INIT ---
+loadFeeds();
+</script>
+
+</body>
+</html>
