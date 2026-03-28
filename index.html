@@ -7,4 +7,23 @@
   <h1>Hello, world!</h1>
   <p>Welcome to my GitHub Pages site.</p>
 </body>
+
+  <div id="feed"></div>
+
+<script>
+fetch("https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/")
+  .then(response => response.json())
+  .then(data => {
+    const container = document.getElementById("feed");
+
+    data.items.slice(0, 5).forEach(item => {
+      const post = document.createElement("div");
+      post.innerHTML = `
+        <h3><a href="${item.link}" target="_blank">${item.title}</a></h3>
+        <p>${item.pubDate}</p>
+      `;
+      container.appendChild(post);
+    });
+  });
+</script>
 </html>
