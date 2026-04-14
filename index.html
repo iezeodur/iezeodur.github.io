@@ -1,91 +1,180 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Cybersecurity News</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    h1 {
-      text-align: center;
-    }
+<title>afrodaemon</title>
 
-    .feed-container {
-      max-width: 900px;
-      margin: auto;
-    }
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico|Inter">
 
-    .post {
-      background: #1e293b;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 10px;
-      transition: 0.2s;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+}
 
-    .post:hover {
-      background: #334155;
-    }
+/* HEADER */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #020617;
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #1e293b;
+}
 
-    .post a {
-      color: #38bdf8;
-      text-decoration: none;
-      font-size: 18px;
-      font-weight: bold;
-    }
+header a {
+  color: #f8fafc;
+  font-family: Pacifico;
+  font-size: 26px;
+  text-decoration: none;
+}
 
-    .meta {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 5px;
-    }
+header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+  color: #94a3b8;
+}
 
-    .source {
-      font-weight: bold;
-      padding: 2px 6px;
-      border-radius: 5px;
-      margin-left: 5px;
-    }
+/* GRID */
+.feed-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
 
-    .krebs { color: #facc15; }
-    .bleep { color: #4ade80; }
-    .secweek { color: #fb7185; }
-    .hacker { color: #a78bfa; }
-  </style>
+/* CARD */
+.post {
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.post:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* IMAGE */
+.thumb {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* CONTENT */
+.post-text {
+  padding: 15px;
+}
+
+.post a {
+  color: #f1f5f9;
+  font-size: 17px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.post a:hover {
+  color: #38bdf8;
+}
+
+/* DESCRIPTION */
+.desc {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+/* META */
+.meta {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+/* SOURCE TAG */
+.source {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  margin-left: 6px;
+}
+
+.krebs { background: #facc15; color: black; }
+.bleep { background: #22c55e; color: black; }
+.secweek { background: #fb7185; color: white; }
+.hacker { background: #8b5cf6; color: white; }
+
+/* CVE TAGS */
+.cve-container {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cve {
+  background: #1e293b;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  border: 1px solid #334155;
+}
+
+.cve strong {
+  color: #38bdf8;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #020617;
+  color: #64748b;
+  font-size: 12px;
+}
+</style>
 </head>
+
 <body>
 
-<h1>🛡️ Cybersecurity News Dashboard</h1>
+<header>
+  <a href="https://www.linkedin.com/company/afrodaemon">afrodaemon</a>
+  <p>👨🏿‍💻 Cybersecurity News & CVE Dashboard</p>
+</header>
+
 <div class="feed-container" id="feed"></div>
 
 <script>
+// FEEDS
 const feeds = [
-  {
-    url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/",
-    source: "Krebs",
-    class: "krebs"
-  },
-  {
-    url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/",
-    source: "BleepingComputer",
-    class: "bleep"
-  },
-  {
-    url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/securityweek",
-    source: "SecurityWeek",
-    class: "secweek"
-  },
-  {
-    url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews",
-    source: "Hacker News",
-    class: "hacker"
-  }
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/", source: "Krebs", class: "krebs" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/", source: "BleepingComputer", class: "bleep" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/securityweek", source: "SecurityWeek", class: "secweek" },
+  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews", source: "Hacker News", class: "hacker" }
 ];
 
+const cveRegex = /CVE-\d{4}-\d{4,7}/gi;
+
+// CLEAN TEXT
+function cleanDescription(html) {
+  if (!html) return "";
+  let text = html.replace(/<[^>]*>/g, "");
+  const txt = document.createElement("textarea");
+  txt.innerHTML = text;
+  text = txt.value;
+  return text.length > 180 ? text.substring(0, 180) + "..." : text;
+}
+
+// LOAD FEEDS
 async function loadFeeds() {
   let allPosts = [];
 
@@ -94,13 +183,31 @@ async function loadFeeds() {
       const res = await fetch(feed.url);
       const data = await res.json();
 
-      const posts = data.items.map(item => ({
-        title: item.title,
-        link: item.link,
-        date: new Date(item.pubDate),
-        source: feed.source,
-        class: feed.class
-      }));
+      const posts = data.items.map(item => {
+        const fullText = (item.title || "") + " " + (item.description || "");
+
+        let image = item.thumbnail || "";
+
+        if (!image && item.enclosure?.link) {
+          image = item.enclosure.link;
+        }
+
+        if (!image && item.description) {
+          const imgMatch = item.description.match(/<img.*?src="(.*?)"/i);
+          if (imgMatch) image = imgMatch[1];
+        }
+
+        return {
+          title: item.title,
+          link: item.link,
+          date: new Date(item.pubDate),
+          source: feed.source,
+          class: feed.class,
+          cves: extractCVEData(fullText),
+          image: image,
+          description: cleanDescription(item.description)
+        };
+      });
 
       allPosts = allPosts.concat(posts);
     } catch (err) {
@@ -112,6 +219,7 @@ async function loadFeeds() {
   displayPosts(allPosts.slice(0, 15));
 }
 
+// DISPLAY
 function displayPosts(posts) {
   const container = document.getElementById("feed");
   container.innerHTML = "";
@@ -120,11 +228,30 @@ function displayPosts(posts) {
     const div = document.createElement("div");
     div.className = "post";
 
+    const cveList = post.cves.map(c => `
+      <div class="cve">
+        <strong>${c.cve}</strong>
+        ${c.cvss ? ` • ${c.cvss}` : ""}
+        ${c.severity ? ` • ${c.severity}` : ""}
+      </div>
+    `).join("");
+
     div.innerHTML = `
-      <a href="${post.link}" target="_blank">${post.title}</a>
-      <div class="meta">
-        ${post.date.toLocaleString()} • 
-        <span class="source ${post.class}">${post.source}</span>
+      ${post.image ? `<img src="${post.image}" class="thumb">` : ""}
+
+      <div class="post-text">
+        <a href="${post.link}" target="_blank">${post.title}</a>
+
+        <p class="desc">${post.description}</p>
+
+        <div class="meta">
+          ${post.date.toLocaleString()} • 
+          <span class="source ${post.class}">${post.source}</span>
+        </div>
+
+        <div class="cve-container">
+          ${cveList}
+        </div>
       </div>
     `;
 
@@ -132,8 +259,42 @@ function displayPosts(posts) {
   });
 }
 
+// CVE EXTRACTION
+function extractCVEData(text) {
+  const results = [];
+  const cves = text.match(cveRegex) || [];
+
+  cves.forEach(cve => {
+    results.push({
+      cve: cve.toUpperCase(),
+      severity: extractSeverity(text),
+      cvss: extractCVSS(text)
+    });
+  });
+
+  return results;
+}
+
+function extractSeverity(text) {
+  const levels = ["Critical", "High", "Medium", "Low"];
+  for (let level of levels) {
+    if (text.toLowerCase().includes(level.toLowerCase())) return level;
+  }
+  return null;
+}
+
+function extractCVSS(text) {
+  const match = text.match(/CVSS[:\s]*([0-9.]+)/i);
+  return match ? match[1] : null;
+}
+
+// INIT
 loadFeeds();
 </script>
+
+<footer>
+  © Ikenna Ezeodurukwe 2026
+</footer>
 
 </body>
 </html>
