@@ -2,299 +2,322 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Framework Hub</title>
 
-<title>afrodaemon</title>
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico|Inter">
 
 <style>
 body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
 }
 
-/* HEADER */
+
 header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  background: #020617;
-  padding: 15px;
-  text-align: center;
-  border-bottom: 1px solid #1e293b;
+    padding: 20px;
+    text-align: center;
+    background: #020617;
+    font-size: 24px;
+    font-weight: bold;
 }
 
-header a {
-  color: #f8fafc;
-  font-family: Pacifico;
-  font-size: 26px;
-  text-decoration: none;
-}
-
-header p {
-  margin: 5px 0 0;
-  font-size: 13px;
-  color: #94a3b8;
-}
 
 /* GRID */
-.feed-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  padding: 20px;
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
 
-/* CARD */
-.post {
-  background: #020617;
-  border: 1px solid #1e293b;
-  border-radius: 14px;
-  overflow: hidden;
-  transition: all 0.25s ease;
+
+.card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.post:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+
+h2 {
+    color: #38bdf8;
 }
 
-/* IMAGE */
-.thumb {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
+
+/* BUTTONS */
+button {
+    background: #38bdf8;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 6px;
 }
 
-/* CONTENT */
-.post-text {
-  padding: 15px;
+
+/* MODAL */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
 
-.post a {
-  color: #f1f5f9;
-  font-size: 17px;
-  font-weight: 600;
-  text-decoration: none;
+
+.modal-content {
+    background: #1e293b;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
 }
 
-.post a:hover {
-  color: #38bdf8;
+
+/* SECTION */
+.section {
+    margin-top: 10px;
 }
 
-/* DESCRIPTION */
-.desc {
-  font-size: 13px;
-  color: #94a3b8;
-  margin: 8px 0;
-  line-height: 1.5;
-}
 
-/* META */
-.meta {
-  font-size: 12px;
-  color: #64748b;
-  margin-top: 10px;
-}
-
-/* SOURCE TAG */
-.source {
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  margin-left: 6px;
-}
-
-.krebs { background: #facc15; color: black; }
-.bleep { background: #22c55e; color: black; }
-.secweek { background: #fb7185; color: white; }
-.hacker { background: #8b5cf6; color: white; }
-
-/* CVE TAGS */
-.cve-container {
-  margin-top: 10px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.cve {
-  background: #1e293b;
-  padding: 5px 8px;
-  border-radius: 8px;
-  font-size: 11px;
-  border: 1px solid #334155;
-}
-
-.cve strong {
-  color: #38bdf8;
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #020617;
-  color: #64748b;
-  font-size: 12px;
+select {
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
 }
 </style>
 </head>
 
+
 <body>
 
-<header>
-  <a href="https://www.linkedin.com/company/afrodaemon">afrodaemon</a>
-  <p>👨🏿‍💻 Cybersecurity News & CVE Dashboard</p>
-</header>
 
-<div class="feed-container" id="feed"></div>
+<header>🔐 Cybersecurity Framework Hub</header>
+
+
+<!-- MAIN GRID -->
+<div class="container">
+
+
+<!-- 🔍 SOLVE A PROBLEM -->
+<div class="card">
+    <h2>🔍 Solve a Security Problem</h2>
+    
+    <select id="problemSelect">
+        <option value="">-- Select a Problem --</option>
+        <option value="phishing">Phishing Attack</option>
+        <option value="ransomware">Ransomware</option>
+        <option value="webhack">Web App Breach</option>
+    </select>
+
+
+    <button onclick="solveProblem()">Analyze</button>
+
+
+    <div id="solutionOutput" class="section"></div>
+</div>
+
+
+<!-- 📊 MITRE INTERACTIVE -->
+<div class="card">
+    <h2>📊 ATT&CK Technique Explorer</h2>
+
+
+    <select id="mitreSelect">
+        <option value="">-- Select Technique --</option>
+        <option value="phishing">Phishing (T1566)</option>
+        <option value="credential">Credential Dumping (T1003)</option>
+        <option value="lateral">Lateral Movement (T1021)</option>
+    </select>
+
+
+    <button onclick="showMitre()">Explore</button>
+
+
+    <div id="mitreOutput" class="section"></div>
+</div>
+
+
+<!-- 🧪 SCENARIOS -->
+<div class="card">
+    <h2>🧪 Incident Scenarios</h2>
+
+
+    <button onclick="loadScenario()">Load Scenario</button>
+
+
+    <div id="scenarioOutput" class="section"></div>
+</div>
+
+
+</div>
+
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+    <div class="modal-content" id="modalContent"></div>
+</div>
+
 
 <script>
-// FEEDS
-const feeds = [
-  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/", source: "Krebs", class: "krebs" },
-  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/", source: "BleepingComputer", class: "bleep" },
-  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/securityweek", source: "SecurityWeek", class: "secweek" },
-  { url: "https://api.rss2json.com/v1/api.json?rss_url=https://feeds.feedburner.com/TheHackersNews", source: "Hacker News", class: "hacker" }
-];
 
-const cveRegex = /CVE-\d{4}-\d{4,7}/gi;
 
-// CLEAN TEXT
-function cleanDescription(html) {
-  if (!html) return "";
-  let text = html.replace(/<[^>]*>/g, "");
-  const txt = document.createElement("textarea");
-  txt.innerHTML = text;
-  text = txt.value;
-  return text.length > 180 ? text.substring(0, 180) + "..." : text;
+/* 🔍 SOLVE PROBLEM */
+function solveProblem() {
+    let problem = document.getElementById("problemSelect").value;
+    let output = document.getElementById("solutionOutput");
+
+
+    if(problem === "phishing") {
+        output.innerHTML = `
+        <b>Frameworks to Use:</b><br>
+        - NIST: Respond & Recover<br>
+        - MITRE: Initial Access (Phishing)<br>
+        - CIS Controls<br><br>
+
+
+        <b>Steps:</b>
+        <ul>
+            <li>Identify compromised users</li>
+            <li>Reset credentials</li>
+            <li>Analyze email headers</li>
+            <li>Block malicious domains</li>
+        </ul>`;
+    }
+
+
+    if(problem === "ransomware") {
+        output.innerHTML = `
+        <b>Frameworks:</b><br>
+        - NIST Incident Response<br>
+        - MITRE Execution & Impact<br><br>
+
+
+        <b>Steps:</b>
+        <ul>
+            <li>Isolate infected systems</li>
+            <li>Check backups</li>
+            <li>Analyze attack vector</li>
+            <li>Patch vulnerabilities</li>
+        </ul>`;
+    }
+
+
+    if(problem === "webhack") {
+        output.innerHTML = `
+        <b>Frameworks:</b><br>
+        - OWASP Top 10<br><br>
+
+
+        <b>Steps:</b>
+        <ul>
+            <li>Check logs for injection</li>
+            <li>Validate inputs</li>
+            <li>Fix authentication flaws</li>
+        </ul>`;
+    }
 }
 
-// LOAD FEEDS
-async function loadFeeds() {
-  let allPosts = [];
 
-  for (let feed of feeds) {
-    try {
-      const res = await fetch(feed.url);
-      const data = await res.json();
+/* 📊 MITRE */
+function showMitre() {
+    let val = document.getElementById("mitreSelect").value;
+    let output = document.getElementById("mitreOutput");
 
-      const posts = data.items.map(item => {
-        const fullText = (item.title || "") + " " + (item.description || "");
 
-        let image = item.thumbnail || "";
+    if(val === "phishing") {
+        output.innerHTML = `
+        <b>Phishing (T1566)</b><br>
+        Detection:
+        <ul>
+            <li>Email gateway logs</li>
+            <li>User reports</li>
+        </ul>
+        Mitigation:
+        <ul>
+            <li>Security awareness training</li>
+            <li>Email filtering</li>
+        </ul>`;
+    }
 
-        if (!image && item.enclosure?.link) {
-          image = item.enclosure.link;
-        }
 
-        if (!image && item.description) {
-          const imgMatch = item.description.match(/<img.*?src="(.*?)"/i);
-          if (imgMatch) image = imgMatch[1];
-        }
+    if(val === "credential") {
+        output.innerHTML = `
+        <b>Credential Dumping</b><br>
+        Detection:
+        <ul>
+            <li>LSASS access alerts</li>
+            <li>EDR triggers</li>
+        </ul>`;
+    }
 
-        return {
-          title: item.title,
-          link: item.link,
-          date: new Date(item.pubDate),
-          source: feed.source,
-          class: feed.class,
-          cves: extractCVEData(fullText),
-          image: image,
-          description: cleanDescription(item.description)
-        };
-      });
 
-      allPosts = allPosts.concat(posts);
-    } catch (err) {
-      console.error("Feed error:", err);
-    }
-  }
-
-  allPosts.sort((a, b) => b.date - a.date);
-  displayPosts(allPosts.slice(0, 15));
+    if(val === "lateral") {
+        output.innerHTML = `
+        <b>Lateral Movement</b><br>
+        Detection:
+        <ul>
+            <li>Unusual SMB traffic</li>
+            <li>Remote login anomalies</li>
+        </ul>`;
+    }
 }
 
-// DISPLAY
-function displayPosts(posts) {
-  const container = document.getElementById("feed");
-  container.innerHTML = "";
 
-  posts.forEach(post => {
-    const div = document.createElement("div");
-    div.className = "post";
+/* 🧪 SCENARIO */
+function loadScenario() {
+    let output = document.getElementById("scenarioOutput");
 
-    const cveList = post.cves.map(c => `
-      <div class="cve">
-        <strong>${c.cve}</strong>
-        ${c.cvss ? ` • ${c.cvss}` : ""}
-        ${c.severity ? ` • ${c.severity}` : ""}
-      </div>
-    `).join("");
 
-    div.innerHTML = `
-      ${post.image ? `<img src="${post.image}" class="thumb">` : ""}
+    output.innerHTML = `
+    <b>Scenario:</b> Employee reports locked files and ransom note.<br><br>
 
-      <div class="post-text">
-        <a href="${post.link}" target="_blank">${post.title}</a>
 
-        <p class="desc">${post.description}</p>
+    <b>Analysis:</b>
+    <ul>
+        <li>MITRE: Impact (Data Encrypted)</li>
+        <li>NIST: Respond Phase</li>
+        <li>CIS: Backup & Recovery</li>
+    </ul>
 
-        <div class="meta">
-          ${post.date.toLocaleString()} • 
-          <span class="source ${post.class}">${post.source}</span>
-        </div>
 
-        <div class="cve-container">
-          ${cveList}
-        </div>
-      </div>
-    `;
-
-    container.appendChild(div);
-  });
+    <button onclick="openModal()">View Response Plan</button>
+    `;
 }
 
-// CVE EXTRACTION
-function extractCVEData(text) {
-  const results = [];
-  const cves = text.match(cveRegex) || [];
 
-  cves.forEach(cve => {
-    results.push({
-      cve: cve.toUpperCase(),
-      severity: extractSeverity(text),
-      cvss: extractCVSS(text)
-    });
-  });
+function openModal() {
+    document.getElementById("modal").style.display = "flex";
 
-  return results;
+
+    document.getElementById("modalContent").innerHTML = `
+    <h3>Incident Response Plan</h3>
+    <ul>
+        <li>Isolate system</li>
+        <li>Notify SOC</li>
+        <li>Restore from backup</li>
+        <li>Conduct root cause analysis</li>
+    </ul>
+    <button onclick="closeModal()">Close</button>
+    `;
 }
 
-function extractSeverity(text) {
-  const levels = ["Critical", "High", "Medium", "Low"];
-  for (let level of levels) {
-    if (text.toLowerCase().includes(level.toLowerCase())) return level;
-  }
-  return null;
+
+function closeModal() {
+    document.getElementById("modal").style.display = "none";
 }
 
-function extractCVSS(text) {
-  const match = text.match(/CVSS[:\s]*([0-9.]+)/i);
-  return match ? match[1] : null;
-}
 
-// INIT
-loadFeeds();
 </script>
 
-<footer>
-  © Ikenna Ezeodurukwe 2026
-</footer>
 
 </body>
 </html>
+
+
+Get Outlook for iOS
