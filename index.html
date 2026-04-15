@@ -5,316 +5,232 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cyber Framework Hub</title>
 
-
 <style>
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0f172a;
-    color: white;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
 }
-
 
 header {
-    padding: 20px;
-    text-align: center;
-    background: #020617;
-    font-size: 24px;
-    font-weight: bold;
+    padding: 20px;
+    text-align: center;
+    background: #020617;
+    font-size: 24px;
+    font-weight: bold;
 }
-
 
 /* GRID */
 .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
 }
-
 
 .card {
-    background: #1e293b;
-    padding: 20px;
-    border-radius: 10px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
 }
-
 
 h2 {
-    color: #38bdf8;
+    color: #38bdf8;
 }
-
 
 /* BUTTONS */
 button {
-    background: #38bdf8;
-    border: none;
-    padding: 10px;
-    margin-top: 10px;
-    cursor: pointer;
-    border-radius: 6px;
+    background: #38bdf8;
+    border: none;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 6px;
 }
-
 
 /* MODAL */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
 }
-
 
 .modal-content {
-    background: #1e293b;
-    padding: 20px;
-    width: 90%;
-    max-width: 600px;
-    border-radius: 10px;
+    background: #1e293b;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
 }
-
 
 /* SECTION */
 .section {
-    margin-top: 10px;
+    margin-top: 10px;
 }
 
-
 select {
-    padding: 10px;
-    margin-top: 10px;
-    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    width: 100%;
 }
 </style>
 </head>
 
-
 <body>
-
 
 <header>🔐 Cybersecurity Framework Hub</header>
 
-
-<!-- MAIN GRID -->
 <div class="container">
 
-
-<!-- 🔍 SOLVE A PROBLEM -->
+<!-- SOLVE -->
 <div class="card">
-    <h2>🔍 Solve a Security Problem</h2>
-    
-    <select id="problemSelect">
-        <option value="">-- Select a Problem --</option>
-        <option value="phishing">Phishing Attack</option>
-        <option value="ransomware">Ransomware</option>
-        <option value="webhack">Web App Breach</option>
-    </select>
+    <h2>🔍 Solve a Security Problem</h2>
+    
+    <select id="problemSelect">
+        <option value="">-- Select a Problem --</option>
+        <option value="phishing">Phishing Attack</option>
+        <option value="ransomware">Ransomware</option>
+        <option value="webhack">Web App Breach</option>
+    </select>
 
+    <button onclick="solveProblem()">Analyze</button>
 
-    <button onclick="solveProblem()">Analyze</button>
-
-
-    <div id="solutionOutput" class="section"></div>
+    <div id="solutionOutput" class="section"></div>
 </div>
 
-
-<!-- 📊 MITRE INTERACTIVE -->
+<!-- MITRE -->
 <div class="card">
-    <h2>📊 ATT&CK Technique Explorer</h2>
+    <h2>📊 ATT&CK Technique Explorer</h2>
 
+    <select id="mitreSelect">
+        <option value="">-- Select Technique --</option>
+        <option value="phishing">Phishing (T1566)</option>
+        <option value="credential">Credential Dumping (T1003)</option>
+        <option value="lateral">Lateral Movement (T1021)</option>
+    </select>
 
-    <select id="mitreSelect">
-        <option value="">-- Select Technique --</option>
-        <option value="phishing">Phishing (T1566)</option>
-        <option value="credential">Credential Dumping (T1003)</option>
-        <option value="lateral">Lateral Movement (T1021)</option>
-    </select>
+    <button onclick="showMitre()">Explore</button>
 
-
-    <button onclick="showMitre()">Explore</button>
-
-
-    <div id="mitreOutput" class="section"></div>
+    <div id="mitreOutput" class="section"></div>
 </div>
 
-
-<!-- 🧪 SCENARIOS -->
+<!-- SCENARIO -->
 <div class="card">
-    <h2>🧪 Incident Scenarios</h2>
+    <h2>🧪 Incident Scenarios</h2>
 
+    <button onclick="loadScenario()">Load Scenario</button>
 
-    <button onclick="loadScenario()">Load Scenario</button>
-
-
-    <div id="scenarioOutput" class="section"></div>
+    <div id="scenarioOutput" class="section"></div>
 </div>
 
-
 </div>
-
 
 <!-- MODAL -->
-<div class="modal" id="modal">
-    <div class="modal-content" id="modalContent"></div>
+<div class="modal" id="modal" onclick="closeModal(event)">
+    <div class="modal-content" id="modalContent"></div>
 </div>
-
 
 <script>
 
-
-/* 🔍 SOLVE PROBLEM */
+/* SOLVE */
 function solveProblem() {
-    let problem = document.getElementById("problemSelect").value;
-    let output = document.getElementById("solutionOutput");
+    let problem = document.getElementById("problemSelect").value;
+    let output = document.getElementById("solutionOutput");
 
+    if (!problem) {
+        output.innerHTML = "⚠️ Please select a problem.";
+        return;
+    }
 
-    if(problem === "phishing") {
-        output.innerHTML = `
-        <b>Frameworks to Use:</b><br>
-        - NIST: Respond & Recover<br>
-        - MITRE: Initial Access (Phishing)<br>
-        - CIS Controls<br><br>
+    if(problem === "phishing") {
+        output.innerHTML = `
+        <b>Frameworks:</b> NIST, MITRE, CIS<br><br>
+        <ul>
+            <li>Identify compromised users</li>
+            <li>Reset credentials</li>
+            <li>Analyze email headers</li>
+            <li>Block domains</li>
+        </ul>`;
+    }
 
+    if(problem === "ransomware") {
+        output.innerHTML = `
+        <b>Frameworks:</b> NIST IR, MITRE<br><br>
+        <ul>
+            <li>Isolate systems</li>
+            <li>Check backups</li>
+            <li>Analyze entry point</li>
+        </ul>`;
+    }
 
-        <b>Steps:</b>
-        <ul>
-            <li>Identify compromised users</li>
-            <li>Reset credentials</li>
-            <li>Analyze email headers</li>
-            <li>Block malicious domains</li>
-        </ul>`;
-    }
-
-
-    if(problem === "ransomware") {
-        output.innerHTML = `
-        <b>Frameworks:</b><br>
-        - NIST Incident Response<br>
-        - MITRE Execution & Impact<br><br>
-
-
-        <b>Steps:</b>
-        <ul>
-            <li>Isolate infected systems</li>
-            <li>Check backups</li>
-            <li>Analyze attack vector</li>
-            <li>Patch vulnerabilities</li>
-        </ul>`;
-    }
-
-
-    if(problem === "webhack") {
-        output.innerHTML = `
-        <b>Frameworks:</b><br>
-        - OWASP Top 10<br><br>
-
-
-        <b>Steps:</b>
-        <ul>
-            <li>Check logs for injection</li>
-            <li>Validate inputs</li>
-            <li>Fix authentication flaws</li>
-        </ul>`;
-    }
+    if(problem === "webhack") {
+        output.innerHTML = `
+        <b>Frameworks:</b> OWASP<br><br>
+        <ul>
+            <li>Check logs</li>
+            <li>Validate inputs</li>
+            <li>Fix auth flaws</li>
+        </ul>`;
+    }
 }
 
-
-/* 📊 MITRE */
+/* MITRE */
 function showMitre() {
-    let val = document.getElementById("mitreSelect").value;
-    let output = document.getElementById("mitreOutput");
+    let val = document.getElementById("mitreSelect").value;
+    let output = document.getElementById("mitreOutput");
 
+    if (!val) {
+        output.innerHTML = "⚠️ Select a technique.";
+        return;
+    }
 
-    if(val === "phishing") {
-        output.innerHTML = `
-        <b>Phishing (T1566)</b><br>
-        Detection:
-        <ul>
-            <li>Email gateway logs</li>
-            <li>User reports</li>
-        </ul>
-        Mitigation:
-        <ul>
-            <li>Security awareness training</li>
-            <li>Email filtering</li>
-        </ul>`;
-    }
+    if(val === "phishing") {
+        output.innerHTML = `<b>Phishing (T1566)</b><ul><li>Email logs</li><li>User reports</li></ul>`;
+    }
 
+    if(val === "credential") {
+        output.innerHTML = `<b>Credential Dumping</b><ul><li>LSASS alerts</li></ul>`;
+    }
 
-    if(val === "credential") {
-        output.innerHTML = `
-        <b>Credential Dumping</b><br>
-        Detection:
-        <ul>
-            <li>LSASS access alerts</li>
-            <li>EDR triggers</li>
-        </ul>`;
-    }
-
-
-    if(val === "lateral") {
-        output.innerHTML = `
-        <b>Lateral Movement</b><br>
-        Detection:
-        <ul>
-            <li>Unusual SMB traffic</li>
-            <li>Remote login anomalies</li>
-        </ul>`;
-    }
+    if(val === "lateral") {
+        output.innerHTML = `<b>Lateral Movement</b><ul><li>SMB anomalies</li></ul>`;
+    }
 }
 
-
-/* 🧪 SCENARIO */
+/* SCENARIO */
 function loadScenario() {
-    let output = document.getElementById("scenarioOutput");
-
-
-    output.innerHTML = `
-    <b>Scenario:</b> Employee reports locked files and ransom note.<br><br>
-
-
-    <b>Analysis:</b>
-    <ul>
-        <li>MITRE: Impact (Data Encrypted)</li>
-        <li>NIST: Respond Phase</li>
-        <li>CIS: Backup & Recovery</li>
-    </ul>
-
-
-    <button onclick="openModal()">View Response Plan</button>
-    `;
+    document.getElementById("scenarioOutput").innerHTML = `
+    <b>Ransomware detected</b><br><br>
+    <button onclick="openModal()">View Response Plan</button>`;
 }
 
-
+/* MODAL */
 function openModal() {
-    document.getElementById("modal").style.display = "flex";
-
-
-    document.getElementById("modalContent").innerHTML = `
-    <h3>Incident Response Plan</h3>
-    <ul>
-        <li>Isolate system</li>
-        <li>Notify SOC</li>
-        <li>Restore from backup</li>
-        <li>Conduct root cause analysis</li>
-    </ul>
-    <button onclick="closeModal()">Close</button>
-    `;
+    document.getElementById("modal").style.display = "flex";
+    document.getElementById("modalContent").innerHTML = `
+    <h3>Response Plan</h3>
+    <ul>
+        <li>Isolate system</li>
+        <li>Notify SOC</li>
+        <li>Restore backup</li>
+    </ul>
+    <button onclick="closeModal()">Close</button>`;
 }
 
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
+function closeModal(e) {
+    if (!e || e.target.id === "modal") {
+        document.getElementById("modal").style.display = "none";
+    }
 }
-
 
 </script>
-
 
 </body>
 </html>
