@@ -1,102 +1,133 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia|Trirong|Pacifico|Cinzel|Sacramento|Gochi Hand">
+
 <title>afrodaemon</title>
 
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Trirong|Cinzel">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia|Trirong|Pacifico|Cinzel|Sacramento|Gochi Hand">
 
 <style>
+
+/* HEADER */
 header {
   color: white;
   font-family: Pacifico, sans-serif;
   font-size: 25px;
   text-align: center;
-  background: #413839; 
+  background: #413839;
+  
 }
+
+header a {
+  color: white;
+  text-decoration: none;
+}
+
 header p {
   color: white;
-  font-family: "Cinzel", sans-serif;
-  font-size: 15px;
-  text-align: center;
-  background: #1C1C1C; 
+  font-family: "Cinzel", serif;
+  font-size: 14px;
+  background: #1C1C1C;
+  margin: 5px 0 0;
+  padding: 6px;
 }
+
+/* BODY */
 body {
   font-family: sans-serif;
-  background: white;
+  background: #d3d3d3;
   color: #e2e8f0;
   padding: 10px;
 }
 
+/* 🔥 MASONRY */
 .feed-container {
-  max-width: 900px;
+  column-count: 3;
+  column-gap: 28px;
+  padding: 30px 24px;
+  max-width: 1200px;
   margin: auto;
 }
 
+@media (max-width: 1000px) {
+  .feed-container { column-count: 2; }
+}
+
+@media (max-width: 600px) {
+  .feed-container { column-count: 1; }
+}
+
+/* 🍎 CARD */
 .post {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 28px;
   background: #F5F5F5;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  transition: 0.2s;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: 0.25s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
-.post:hover { background: #E5E4E2; }
-
-.post-content {
-  display: flex;
-  gap: 15px;
-  align-items: flex-start;
+.post:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
 }
 
+/* FEATURED */
+.featured {
+  border-left: 4px solid #ce5c38;
+}
+
+/* IMAGE */
 .thumb {
-  width: 120px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  flex-shrink: 0;
-  transition: transform 0.2s;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.post:hover .thumb {
-  transform: scale(1.05);
+/* SECTIONS */
+.section {
+  padding: 14px 16px;
 }
 
-.post-text {
-  flex: 1;
-}
-
-.post a {
-  color: #1C1C1C;
-  text-decoration: none;
+/* TITLE */
+.title {
+  font-family: "Cinzel", serif;
   font-size: 18px;
   font-weight: bold;
+  color: #1C1C1C;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
 }
 
+/* DESCRIPTION */
 .desc {
   font-size: 14px;
   color: #5E7D7E;
-  margin: 6px 0 8px 0;
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  line-height: 1.6;
 }
 
-.meta {
+/* DIVIDER */
+.divider {
+  height: 1px;
+  background: #E5E4E2;
+}
+
+/* META BAR */
+.meta-bar {
   font-size: 12px;
-  color: #94a3b8;
-  margin-top: 5px;
+  color: #64748b;
+  display: flex;
+  justify-content: space-between;
 }
 
+/* SOURCE COLORS */
 .source {
   font-weight: bold;
-  padding: 2px 6px;
-  border-radius: 5px;
-  margin-left: 5px;
 }
 
 .krebs { color: #facc15; }
@@ -104,44 +135,44 @@ body {
 .secweek { color: #fb7185; }
 .hacker { color: #a78bfa; }
 
+/* CVE SECTION */
+.cve-section {
+  background: #ECECEC;
+}
+
 .cve {
-  margin-top: 5px;
   font-size: 12px;
   background: #52595D;
-  padding: 5px;
-  border-radius: 5px;
+  color: white;
+  padding: 8px;
+  border-radius: 8px;
+  margin-top: 6px;
 }
 
-@media (max-width: 600px) {
-  .post-content {
-    flex-direction: column;
-  }
-
-  .thumb {
-    width: 100%;
-    height: 180px;
-  }
-}
-
+/* FOOTER */
 footer {
   text-align: center;
   padding: 20px;
   background: #ce5c38;
+  color: white;
+  font-size: 12px;
 }
+
 </style>
 </head>
 
-
-
 <body>
+
 <header>
   <a href="https://www.linkedin.com/company/afrodaemon">afrodaemon</a>
-  <p font-size: 1px;> 👨🏿‍💻 Cybersecurity News & CVE Dashboard</p>
+  <p>👨🏿‍💻 Cybersecurity News & CVE Dashboard</p>
 </header>
+
 <div class="feed-container" id="feed"></div>
 
 <script>
-// --- FEEDS CONFIG ---
+
+// FEEDS
 const feeds = [
   { url: "https://api.rss2json.com/v1/api.json?rss_url=https://krebsonsecurity.com/feed/", source: "Krebs", class: "krebs" },
   { url: "https://api.rss2json.com/v1/api.json?rss_url=https://www.bleepingcomputer.com/feed/", source: "BleepingComputer", class: "bleep" },
@@ -151,20 +182,19 @@ const feeds = [
 
 const cveRegex = /CVE-\d{4}-\d{4,7}/gi;
 
-// --- CLEAN DESCRIPTION ---
+// CLEAN TEXT
 function cleanDescription(html) {
   if (!html) return "";
-
   let text = html.replace(/<[^>]*>/g, "");
 
   const txt = document.createElement("textarea");
   txt.innerHTML = text;
   text = txt.value;
 
-  return text.length > 180 ? text.substring(0, 180) + "..." : text;
+  return text.length > 300 ? text.substring(0, 300) + "..." : text;
 }
 
-// --- LOAD FEEDS ---
+// LOAD
 async function loadFeeds() {
   let allPosts = [];
 
@@ -176,10 +206,9 @@ async function loadFeeds() {
       const posts = data.items.map(item => {
         const fullText = (item.title || "") + " " + (item.description || "");
 
-        // --- IMAGE EXTRACTION ---
         let image = item.thumbnail || "";
 
-        if (!image && item.enclosure && item.enclosure.link) {
+        if (!image && item.enclosure?.link) {
           image = item.enclosure.link;
         }
 
@@ -188,15 +217,13 @@ async function loadFeeds() {
           if (imgMatch) image = imgMatch[1];
         }
 
-        const cveData = extractCVEData(fullText, item.title || "", item.link);
-
         return {
           title: item.title,
           link: item.link,
           date: new Date(item.pubDate),
           source: feed.source,
           class: feed.class,
-          cves: cveData,
+          cves: extractCVEData(fullText),
           image: image,
           description: cleanDescription(item.description)
         };
@@ -204,7 +231,7 @@ async function loadFeeds() {
 
       allPosts = allPosts.concat(posts);
     } catch (err) {
-      console.error("Feed error:", err);
+      console.error(err);
     }
   }
 
@@ -212,7 +239,7 @@ async function loadFeeds() {
   displayPosts(allPosts.slice(0, 15));
 }
 
-// --- DISPLAY POSTS ---
+// DISPLAY
 function displayPosts(posts) {
   const container = document.getElementById("feed");
   container.innerHTML = "";
@@ -221,51 +248,55 @@ function displayPosts(posts) {
     const div = document.createElement("div");
     div.className = "post";
 
-    const cveList = post.cves.map(c => `
-      <div class="cve">
-        🔎 <strong>${c.cve}</strong>
-        ${c.severity ? ` | Severity: ${c.severity}` : ""}
-        ${c.cvss ? ` | CVSS: ${c.cvss}` : ""}
-        ${c.software.length ? ` | Software: ${c.software.join(", ")}` : ""}
-        <br>${c.description}
-      </div>
-    `).join("");
+    if (post.cves.length >= 2) {
+      div.classList.add("featured");
+    }
 
     div.innerHTML = `
-      <div class="post-content">
-        ${post.image ? `<img src="${post.image}" class="thumb">` : ""}
-        
-        <div class="post-text">
-          <a href="${post.link}" target="_blank">${post.title}</a>
+      ${post.image ? `<img src="${post.image}" class="thumb">` : ""}
 
-          <p class="desc">${post.description}</p>
+      <div class="section">
+        <a href="${post.link}" target="_blank" class="title">
+          ${post.title}
+        </a>
 
-          <div class="meta">
-            ${post.date.toLocaleString()} • 
-            <span class="source ${post.class}">${post.source}</span>
-          </div>
-
-          ${cveList}
-        </div>
+        <p class="desc">${post.description}</p>
       </div>
+
+      <div class="divider"></div>
+
+      <div class="section meta-bar">
+        <span>${post.date.toLocaleString()}</span>
+        <span class="source ${post.class}">${post.source}</span>
+      </div>
+
+      ${post.cves.length ? `
+        <div class="divider"></div>
+
+        <div class="section cve-section">
+          ${post.cves.map(c => `
+            <div class="cve">
+              🔎 ${c.cve}
+              ${c.severity ? ` • ${c.severity}` : ""}
+              ${c.cvss ? ` • CVSS ${c.cvss}` : ""}
+            </div>
+          `).join("")}
+        </div>
+      ` : ""}
     `;
 
     container.appendChild(div);
   });
 }
 
-// --- CVE EXTRACTION ---
-function extractCVEData(text, title, link) {
+// CVE
+function extractCVEData(text) {
   const results = [];
   const cves = text.match(cveRegex) || [];
 
   cves.forEach(cve => {
     results.push({
       cve: cve.toUpperCase(),
-      article: title,
-      link: link,
-      description: extractDescription(text, cve),
-      software: extractSoftware(text),
       severity: extractSeverity(text),
       cvss: extractCVSS(text)
     });
@@ -274,23 +305,12 @@ function extractCVEData(text, title, link) {
   return results;
 }
 
-function extractDescription(text, cve) {
-  const index = text.indexOf(cve);
-  if (index === -1) return "";
-  return text.substring(Math.max(0, index - 100), index + 150).replace(/\s+/g, " ");
-}
-
-function extractSoftware(text) {
-  const keywords = ["Windows", "Linux", "Apache", "NGINX", "Chrome", "Firefox", "Android", "iOS", "Cisco", "VMware", "Microsoft"];
-  return keywords.filter(k => text.includes(k));
-}
-
 function extractSeverity(text) {
   const levels = ["Critical", "High", "Medium", "Low"];
   for (let level of levels) {
     if (text.toLowerCase().includes(level.toLowerCase())) return level;
   }
-  return "Unknown";
+  return null;
 }
 
 function extractCVSS(text) {
@@ -298,15 +318,14 @@ function extractCVSS(text) {
   return match ? match[1] : null;
 }
 
-// --- INIT ---
+// INIT
 loadFeeds();
+
 </script>
+
 <footer>
-  <small style="font-family:garamond; font-size:10px; color:white">
-    © Ikenna Ezeodurukwe 2026 - All Rights Reserved
-  </small>
+  © Ikenna Ezeodurukwe 2026
 </footer>
+
 </body>
-
-
 </html>
